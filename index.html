@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cute cat clicker 💖</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'comic sans ms', cursive, sans-serif;
+      background: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #header {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #header h1 {
+      margin: 0;
+      text-transform: lowercase;
+      color: #e60073;
+      font-size: 24px;
+    }
+
+    #header h2 {
+      margin: 5px 0 10px 0;
+      font-size: 18px;
+      color: #ff3399;
+      text-transform: lowercase;
+    }
+
+    #footer {
+      text-align: center;
+      color: #ff3399;
+      font-size: 16px;
+      margin-top: 10px;
+      text-transform: lowercase;
+    }
+
+    #currencyDisplay {
+      font-size: 20px;
+      margin: 10px;
+      color: #ff3399;
+    }
+
+    #cat {
+      width: 120px;
+      max-width: 40vw;
+      height: auto;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: transform 0.1s;
+      margin-bottom: 10px;
+    }
+
+    #messages {
+      position: absolute;
+      top: 10%;
+      font-size: 18px;
+      color: #e60073;
+      text-align: center;
+      pointer-events: none;
+      width: 100%;
+    }
+
+    #store {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+    }
+
+    .storeItem {
+      background-color: #ffb3d9;
+      border: 2px solid #e60073;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin: 5px;
+      cursor: pointer;
+      transition: transform 0.1s;
+      text-align: center;
+      font-size: 16px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .storeItem:hover {
+      transform: scale(1.05);
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff99cc;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 1;
+      animation: floatUp 1s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <h1>cute cat clicker 💖</h1>
+    <h2>for chloe 💕</h2>
+  </div>
+
+  <div id="currencyDisplay">hearts: 0</div>
+  <img id="cat" src="https://imgs.search.brave.com/1MZIYOmoCh0wcvga9v69FWPOGvPSonQGYkswjIU2d3M/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS50ZW5vci5jb20v/TTZoUXpxM0F5LXNB/QUFBTS9jdXRlLWNh/dC1jdXRlLmdpZg.gif" alt="cute cat">
+
+  <div id="messages"></div>
+
+  <div id="store">
+    <div class="storeItem" data-cost="50" data-value="1">tiny love charm (+1 per click)</div>
+    <div class="storeItem" data-cost="200" data-value="5">adorable kitty hat (+5 per click)</div>
+    <div class="storeItem" data-cost="1000" data-value="20">mega heart amplifier (+20 per click)</div>
+  </div>
+
+  <div id="footer">
+    with love, by kay<br>
+    to my one and only, chloe
+  </div>
+
+  <script>
+    const cat = document.getElementById("cat");
+    const currencyDisplay = document.getElementById("currencyDisplay");
+    const messagesDiv = document.getElementById("messages");
+    const storeItems = document.querySelectorAll(".storeItem");
+
+    let currency = 0;
+    let perClick = 1;
+
+    const messages = [
+      "you're my favorite human 💕",
+      "i love you so much 💖",
+      "you're the sweetest 🍬",
+      "you make my heart purr 😻",
+      "every moment with you is special 🌸",
+      "you're my sunshine 🌟",
+      "i adore you endlessly 💝"
+    ];
+
+    function updateCurrency() {
+      currencyDisplay.textContent = `hearts: ${currency}`;
+    }
+
+    function showMessage(msg) {
+      const message = msg || messages[Math.floor(Math.random() * messages.length)];
+      const msgEl = document.createElement("div");
+      msgEl.textContent = message;
+      msgEl.style.position = "absolute";
+      msgEl.style.top = (Math.random() * 50 + 20) + "%";
+      msgEl.style.left = (Math.random() * 70 + 15) + "%";
+      msgEl.style.color = "#e60073";
+      msgEl.style.fontSize = "18px";
+      msgEl.style.opacity = 1;
+      msgEl.style.transition = "opacity 1.5s ease-out, transform 1.5s ease-out";
+      messagesDiv.appendChild(msgEl);
+
+      setTimeout(() => {
+        msgEl.style.opacity = 0;
+        msgEl.style.transform = "translateY(-50px)";
+      }, 50);
+
+      setTimeout(() => {
+        msgEl.remove();
+      }, 1600);
+    }
+
+    function clickCat() {
+      currency += perClick;
+      updateCurrency();
+      showMessage();
+      cat.style.transform = "scale(1.1)";
+      setTimeout(() => { cat.style.transform = "scale(1)"; }, 100);
+    }
+
+    cat.addEventListener("click", clickCat);
+    cat.addEventListener("touchstart", clickCat);
+
+    storeItems.forEach(item => {
+      item.addEventListener("click", () => {
+        const cost = parseInt(item.getAttribute("data-cost"));
+        const value = parseInt(item.getAttribute("data-value"));
+        if(currency >= cost){
+          currency -= cost;
+          perClick += value;
+          updateCurrency();
+          showMessage(`purchased: ${item.textContent.toLowerCase()}`);
+          item.style.transform = "scale(1.1)";
+          setTimeout(() => { item.style.transform = "scale(1)"; }, 100);
+        } else {
+          showMessage("not enough hearts 💔");
+        }
+      });
+    });
+
+    // create pink particles that follow the mouse
+    document.addEventListener("mousemove", (e) => {
+      createParticle(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("touchmove", (e) => {
+      if(e.touches.length > 0){
+        createParticle(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    });
+
+    function createParticle(x, y){
+      const p = document.createElement("div");
+      p.classList.add("particle");
+      p.style.left = (x - 5) + "px";
+      p.style.top = (y - 5) + "px";
+      document.body.appendChild(p);
+      setTimeout(() => { p.remove(); }, 1000);
+    }
+
+    updateCurrency();
+  </script>
+</body>
+</html>
